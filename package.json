@@ -1,16 +1,7 @@
 {
-  "dependencies": {
-    "@hazo-development/hazo-core": "^1.2.3",
-    "discord.js": "^13.1.0",
-    "fast-csv": "^4.3.6",
-    "fs": "^0.0.1-security",
-    "mysql": "^2.18.1",
-    "node-fetch": "^2.6.1"
-  },
   "name": "guess-it",
-  "version": "1.0.0",
+  "version": "2.0.0 DEV 1",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -24,5 +15,13 @@
     "url": "https://github.com/MastiderMast/Guess-It/issues"
   },
   "homepage": "https://github.com/MastiderMast/Guess-It#readme",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "discord.js": "^13.1.0",
+    "fast-csv": "^4.3.6",
+    "fs": "^0.0.1-security",
+    "mysql": "^2.18.1",
+    "node-fetch": "^2.6.1"
+  },
   "description": ""
 }
