@@ -1,6 +1,6 @@
 {
   "name": "guess-it",
-  "version": "2.0.0 DEV 1",
+  "version": "2.0.0 DEV 2",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

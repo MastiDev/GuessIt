@@ -29,14 +29,17 @@ module.exports = new Event("messageCreate", async (client, message) => {
 						
 						const winembed = new Discord.MessageEmbed()
 						winembed.setTitle(`🎉 Congratulations ${message.author.tag} 🎉`)
-						winembed.setDescription(`Congratulations you have guessed the correct number after total ${row.trys} trys guess`)
+						winembed.setDescription(`Congratulations you have guessed the correct number after ${row.trys} trys`)
 
-						if(!row.price === "none") {
-							winembed.addField("Price", `\`\`\`${row.price}\`\`\``)
-						}
+						winembed.addField("Price", `\`\`\`${row.price}\`\`\``)
+						winembed.color(`${config.embedcolor}`)
+
 
 						message.reply({embeds: [winembed]})
 
+					}else {
+						var DateandTime = new Date()
+						con.query(`UPDATE rounds SET trys = '${row.trys + 1}', lasttry = '${DateandTime.toLocaleDateString() + " " + DateandTime.toLocaleTimeString()}' WHERE id = '${row.id}'`)
 					}
 
 				}

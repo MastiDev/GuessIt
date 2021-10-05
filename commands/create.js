@@ -5,6 +5,7 @@ const { version } = require('../package.json');
 const config = require("../Data/config.json");
 const { MessageSelectMenu, MessageActionRow, MessageButton } = require("discord.js");
 const { red, green, blue, yellow, cyan, greenBright, redBright, grey, yellowBright, cyanBright, black, blueBright } = require('chalk');
+const talkedRecently = new Set();
 
 module.exports = new Command({
 	name: "create",
@@ -14,35 +15,34 @@ module.exports = new Command({
 	async run(message, args, con, serverstats, userstats, client) {
 		try {
 
-            if(args[1] === undefined) return message.reply("CHANNEL")
+            if (talkedRecently.has(message.author.id)) return message.reply("Wait 10 seconds!");
+
+            let channel = message.mentions.channels.first();
+            if(!channel) return message.reply("You have to mention a channel!")
+            int = id = channel.id
 
             if(args[2] === undefined) return message.reply("MAX NUMMER")
             if(isNaN(args[2])) message.reply("You have to enter a number!")    
             if(args[2] < 1) return message.reply("You really have no decency!")
-            if(args[2] > 10000) return message.reply("You really have no decency!")
+            if(args[2] > 1000000) return message.reply("You really have no decency!")
 
             if(args[3] === undefined) console.log("test")
             if(args[3] === undefined) return message.reply("PREIS")
 
-            con.query(`INSERT INTO rounds (id, guildid, channelid, number, price) VALUES (NULL, '${message.guild.id}', '${args[1]}', '${getRandomInt(args[2])}', '${args.splice(3).join(" ")+" "}')`)
+            con.query(`INSERT INTO rounds (id, guildid, channelid, number, price) VALUES (NULL, '${message.guild.id}', '${id}', '${getRandomInt(args[2])}', '${args.splice(3).join(" ")+" "}')`)
 
             message.reply(`Successfully added to the todo list!`)
 
+            talkedRecently.add(message.author.id);
+            setTimeout(() => {
+              talkedRecently.delete(message.author.id);
+            }, 10000);
 
 
 
 
-                  /*  
+            /*  
             switch(args[1]){
-                case "delete":
-                    try {
-                        if(args[2] === undefined) return message.reply("Not enough arguments!")
-                        con.query(`DELETE FROM todo WHERE id = '${args[2]}' AND user = '${message.author.id}'`)
-                        message.reply(`Successfully removed from the todo list!`)
-                    } catch (error) {
-                        core.sendERRLog(error,message,"883778273916633179")
-                    }
-                    break;
                 case "list":
                     try {
                         con.query(`SELECT * FROM todo WHERE user = '${message.author.id}'`, (err, result) => {
@@ -118,13 +118,6 @@ module.exports = new Command({
                     } catch (error) {
                         core.sendERRLog(error,message,"883778273916633179")
                         if(error) throw error;
-                    }
-                    break;
-                default:
-                    try {
-                        message.reply('Use ' + prefix + 'todo add | remove | list | info | check')
-                    } catch (error) {
-                        core.sendERRLog(error,message,"883778273916633179")
                     }
                     break;
             }
