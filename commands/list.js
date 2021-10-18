@@ -5,32 +5,34 @@ const { version } = require('../package.json');
 const config = require("../Data/config.json");
 const { MessageSelectMenu, MessageActionRow, MessageButton } = require("discord.js");
 const { red, green, blue, yellow, cyan, greenBright, redBright, grey, yellowBright, cyanBright, black, blueBright } = require('chalk');
+const mysql = require("mysql");
 
 module.exports = new Command({
-	name: "!explain",
-	description: "Hello world.",
+	name: "list",
+	description: "list command",
 	aliases: [],
 
 	async run(message, args, con, serverstats, userstats, client) {
 		try {
 
-            con.query(`SELECT * FROM todo WHERE user = '${message.author.id}'`, (err, result) => {
+            con.query(`SELECT * FROM rounds WHERE guildid = '${message.guild.id}'`, (err, result) => {
+                if(!(result.length > 0)) return message.reply("No active rounds!")
                 var IDlist = [];
-                var CONTENTlist = [];
-                var DONElist = [];
+                var CHANNELIDlist = [];
+                var PRICElist = [];
                 result.forEach(function(row){
                     IDlist.push("\n"+row.id)
-                    CONTENTlist.push("\n"+core.stringTruncate(row.content, 50))
-                    DONElist.push("\n"+row.done.replace("false", "❌").replace("true", "✅"))
+                    CHANNELIDlist.push("\n"+`<#${row.channelid}>`)
+                    PRICElist.push("\n"+row.price)
                 })
                 
                 const embed = new Discord.MessageEmbed()
-                .setColor('FFF013')
-                .setTitle('To-Do list')
+                .setColor(`${config.embedcolor}`)
+                .setTitle('Active rounds!')
                 .setDescription("\n")
                 .addField(`ID`, IDlist.toString(), true)
-                .addField(`TODO`, CONTENTlist.toString(), true)
-                .addField(`CHECKED`, DONElist.toString(), true)
+                .addField(`CHANNELID`, CHANNELIDlist.toString(), true)
+                .addField(`PRICE`, PRICElist.toString(), true)
                 message.reply({embeds: [embed]})
                 
             })
