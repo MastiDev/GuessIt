@@ -5,10 +5,10 @@ const config = require("../Data/config.json");
 const { red, green, blue, yellow, cyan, greenBright, redBright, grey, yellowBright, cyanBright, black, blueBright } = require('chalk');
 
 var con = mysql.createConnection({multipleStatements: true,
-    host: "194.34.246.208",
-    user: "admin",
-    password: "QHyjEuHRgk763MUmXxSUFZMaYDjdamSV",
-    database: "GuessIt",
+    host: `${config.conhost}`,
+    user: `${config.conuser}`,
+    password: `${config.conpassword}`,
+    database: `${config.condatabase}`,
 	insecureAuth: true
 });
 
