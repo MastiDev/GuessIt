@@ -1,16 +1,18 @@
 const Command = require("../Structures/Command.js");
-const Discord = require("discord.js");
 const Event = require("../Structures/Event.js");
-const { version } = require('../package.json');
+const Discord = require("discord.js");
 const config = require("../Data/config.json");
+const { version } = require('../package.json');
 const { MessageSelectMenu, MessageActionRow, MessageButton } = require("discord.js");
 const { red, green, blue, yellow, cyan, greenBright, redBright, grey, yellowBright, cyanBright, black, blueBright } = require('chalk');;
+const mysql = require('mysql');
+const fs = require('fs')
 
 module.exports = new Event("ready", client => {
 
     try {
         
-        console.log(yellow(`Angemeldet als '${client.user.tag}'! Version -> ` + version))
+        console.log(yellow(`[LOGIN] logged in as ${client.user.tag} -> Version ${version}`))
 
         const startup = new Discord.MessageEmbed()
         startup.setTitle(`${client.user.username} | Log`)
