@@ -8,6 +8,16 @@ const { red, green, blue, yellow, cyan, greenBright, redBright, grey, yellowBrig
 const mysql = require('mysql');
 const fs = require('fs')
 
+var con = mysql.createConnection({
+    host: `${config.mysql.host}`,
+    port: `${config.mysql.port}`,
+    user: `${config.mysql.user}`,
+    password: `${config.mysql.password}`,
+    database: `${config.mysql.database}`,
+    insecureAuth: true,
+    multipleStatements: true
+});
+
 module.exports = new Event("ready", client => {
 
     try {

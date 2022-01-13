@@ -16,7 +16,7 @@ var con = mysql.createConnection({
     database: `${config.mysql.database}`,
     insecureAuth: true,
     multipleStatements: true
-  });
+});
   
 con.connect(err => {
 
