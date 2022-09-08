@@ -14,7 +14,7 @@ module.exports = new Command({
 	description: "delete",
 	aliases: ["del"],
 
-	async run(message, args, con, serverstats, userstats, client) {
+	async run(message, args, client) {
 		try {
 
             if (talkedRecently.has(message.author.id)) return message.reply("Wait 10 seconds!");

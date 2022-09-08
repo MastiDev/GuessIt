@@ -13,7 +13,7 @@ module.exports = new Command({
 	description: "info command",
 	aliases: [],
 
-	async run(message, args, con, serverstats, userstats, client) {
+	async run(message, args, client) {
 		try {
 
             if (args[1] === undefined) return message.reply("You have to enter a Round-ID!")

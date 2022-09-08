@@ -1,26 +1,45 @@
-const Command = require('../structures/command.js');
-const Event = require('../structures/event.js');
-const config = require('../data/config.json');
-const Discord = require('discord.js');
-const { MessageSelectMenu, MessageActionRow, MessageButton } = require('discord.js');
-const { version } = require('../package.json');
-const { red, green, blue, yellow, cyan, greenBright, redBright, grey, yellowBright, cyanBright, black, blueBright } = require('chalk');
-const mysql = require('mysql');
-const fs = require('fs')
+const Command = require("../structures/command.js");
+const Discord = require("discord.js");
+const config = require("../data/config.json");
+const mysql = require('mysql2');
+const util = require('util');
+
+var con = mysql.createPool({
+    multipleStatements: true,
+    insecureAuth: true,
+    host: `${config.mysql.host}`,
+    port: `${config.mysql.port}`,
+    user: `${config.mysql.user}`,
+    password: `${config.mysql.password}`,
+    database: `${config.mysql.database}`
+});
+
+const dbquery = util.promisify(con.query).bind(con);
 
 module.exports = new Command({
 	name: "setprefix",
-	description: "set a custom prefix",
+	description: "setprefix",
 	aliases: [],
-	
-	async run(message, args, con, serverstats, userstats, client) {
+
+	async run(message, args, client) {
 		try {
-		if(!message.member.permissions.has("ADMINISTRATOR")) return message.reply("You don't have enough permissions!");
-		if(!(args.length > 1)) return message.reply("not enough arguments!")
-			con.query(`UPDATE serverstats SET prefix = '${args[1]}' WHERE serverid = '${message.guild.id}'`)
-			message.channel.send("The Prefix is now " + newprefix)
+			if (!message.member.permissions.has("MANAGE_ROLES")) return embeds.errorEmbed(client, message, "You do not have the permission to use this command!");
+
+			let rows = await dbquery(`SELECT * FROM guilds WHERE guildid = '${message.guild.id}'`);	
+
+			if (!args[1]) return message.reply(`Use ${rows[0].prefix}setprefix <prefix>`);
+
+			await dbquery(`UPDATE guilds SET prefix = '${args[1]}' WHERE guildid = '${message.guild.id}'`);
+			
+			const embed = new Discord.EmbedBuilder()
+				.setTitle("Prefix changed!")
+				.setDescription(`The prefix has been changed to ${args[1]}`)
+				.setColor("149C51")
+
+			message.reply({embeds: [embed]});
+
 		} catch (error) {
-			console.log(red(`[ERROR] In the command ${this.name} an error has occurred -> ${error}`))
+			console.log(error);
 		}
 	}
 });

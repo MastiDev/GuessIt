@@ -4,11 +4,9 @@ const Discord = require("discord.js");
 /**
  * @param {Discord.Message | Discord.Interaction} message
  * @param {string[]} args
- * @param {string[]} con
- * @param {string[]} rows
  * @param {Client} client
  */
-function RunFunction(message, args, con, serverstats, userstats, client) {}
+function RunFunction(message, args, client) {}
 
 class Command {
 	/**

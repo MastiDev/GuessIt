@@ -12,7 +12,7 @@ module.exports = new Command({
 	name: "bot",
 	description: "Shows information about the bot!",
 	aliases: [],
-	async run(message, args, con, serverstats, userstats, client) {
+	async run(message, args, client) {
 
 		try {
 			let totalSeconds = (client.uptime / 1000);

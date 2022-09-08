@@ -1,25 +1,27 @@
-const { red, green, blue, yellow, cyan, greenBright, redBright, grey, yellowBright, cyanBright, black, blueBright } = require('chalk');
+const { yellow, greenBright } = require('chalk');
+const chalk = require('chalk');
 
 const Discord = require("discord.js");
 const Command = require("./command.js");
 const Event = require("./event.js");
 
 const config = require("../data/config.json");
-const intents = new Discord.Intents(32767);
 const fs = require("fs");
 
 class Client extends Discord.Client {
 	constructor() {
-		super({ intents });
+		super({ 
+			intents: config.bot.intents,
+			allowedMentions: { 
+				repliedUser: false 
+			} 
+	});
 
 		/**
 		 * @type {Discord.Collection<string, Command>}
 		 */
 		this.commands = new Discord.Collection();
-
-		this.aliases = new Discord.Collection()
-
-		this.prefix = config.prefix;
+		this.aliases = new Discord.Collection();
 	}
 
 	start(token) {
@@ -30,7 +32,7 @@ class Client extends Discord.Client {
 				 * @type {Command}
 				 */
 				const command = require(`../commands/${file}`);
-				console.log(greenBright(`[COMMAND] Loaded ${(yellow(file))} with command ${(yellow(command.name))} ${(yellow(`[${command.aliases}]`))}`));
+				console.log(chalk.greenBright(`[COMMAND] Loaded ${(yellow(file))} with command ${(yellow(command.name))} ${(yellow(`[${command.aliases}]`))}`));
 				this.commands.set(command.name, command);
 				
 				if (command.aliases) {

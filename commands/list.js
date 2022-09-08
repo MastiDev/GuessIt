@@ -13,7 +13,7 @@ module.exports = new Command({
 	description: "list command",
 	aliases: [],
 
-	async run(message, args, con, serverstats, userstats, client) {
+	async run(message, args, client) {
 		try {
 
             con.query(`SELECT * FROM rounds WHERE guildid = '${message.guild.id}'`, (err, result) => {

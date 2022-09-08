@@ -1,27 +1,22 @@
 {
   "name": "guess-it",
-  "version": "2.0.0 DEV 2",
+  "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MastiderMast/Guess-It.git"
+    "url": "git+https://github.com/MastiderMast/Discord.js-Advanced-Command-Handler.git"
   },
   "author": "Masti#5516",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MastiderMast/Guess-It/issues"
+    "url": "https://github.com/MastiderMast/Discord.js-Advanced-Command-Handler/issues"
   },
-  "homepage": "https://github.com/MastiderMast/Guess-It#readme",
+  "homepage": "https://github.com/MastiderMast/Discord.js-Advanced-Command-Handler#readme",
   "dependencies": {
     "chalk": "^4.1.2",
-    "discord.js": "^13.1.0",
-    "fast-csv": "^4.3.6",
+    "discord.js": "^14.3.0",
     "fs": "^0.0.1-security",
-    "mysql": "^2.18.1",
-    "node-fetch": "^2.6.1"
+    "mysql2": "^2.3.3"
   },
   "description": ""
 }

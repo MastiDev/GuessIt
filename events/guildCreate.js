@@ -17,7 +17,7 @@ var con = mysql.createPool({
 
 const dbquery = util.promisify(con.query).bind(con);
 
-module.exports = new Event("ready", async(client) => {
+module.exports = new Event("guildCreate", async(client) => {
     try {
         console.log(yellow(`[LOGIN] logged in as ${client.user.tag} -> Version ${version}`))
 

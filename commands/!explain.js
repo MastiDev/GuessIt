@@ -13,7 +13,7 @@ module.exports = new Command({
 	description: "Hello world.",
 	aliases: [],
 
-	async run(message, args, con, serverstats, userstats, client) {
+	async run(message, args, client) {
 		try {
 			message.reply("Hello world!");
 		} catch (error) {
