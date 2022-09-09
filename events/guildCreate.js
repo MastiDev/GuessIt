@@ -15,10 +15,10 @@ var con = mysql.createPool({
 
 const dbquery = util.promisify(con.query).bind(con);
 
-module.exports = new Event("guildCreate", async(client) => {
+module.exports = new Event("guildCreate", async(client, guild) => {
     try {
-        await dbquery(`INSERT IGNORE INTO guilds (id, guildid) VALUES (NULL, '${message.guild.id}')`);
+        await dbquery(`INSERT IGNORE INTO guilds (guildid) VALUES ('${guild.id}')`);
     } catch (error) {
-        return console.log(red(`[EVENT] In the event ready an error has occurred -> ${error}`))
+        console.log(error);
     }
 });
