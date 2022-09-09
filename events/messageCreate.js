@@ -34,7 +34,7 @@ module.exports = new Event("messageCreate", async(client, message) => {
         }
 
     } catch (error) {
-        return console.log(error);
+        console.log(error);
     }
 });
 

@@ -1,10 +1,6 @@
 const Command = require('../structures/command.js');
-const Event = require('../structures/event.js');
 const config = require('../data/config.json');
 const Discord = require('discord.js');
-const { MessageSelectMenu, MessageActionRow, MessageButton } = require('discord.js');
-const { version } = require('../package.json');
-const { red, green, blue, yellow, cyan, greenBright, redBright, grey, yellowBright, cyanBright, black, blueBright } = require('chalk');
 const mysql = require('mysql2');
 const util = require('util');
 
@@ -27,7 +23,6 @@ module.exports = new Command({
 
 	async run(message, args, client) {
 		try {
-
             let rounds = await dbquery(`SELECT * FROM rounds WHERE guildid = '${message.guild.id}'`)
             if (rounds.length === 0) return message.reply("There are no rounds in this server!")
 
@@ -35,8 +30,6 @@ module.exports = new Command({
             for (let i = 0; i < rounds.length; i++) {
                 roundlist.push(`\n<#${rounds[i].channelid}> | Price: ${rounds[i].price} | Trys: ${rounds[i].trys} | Last Try: ${rounds[i].lasttry}`)
             }
-
-
 
             const embed = new Discord.EmbedBuilder()
             .setTitle(`Round List`)

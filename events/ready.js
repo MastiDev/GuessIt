@@ -1,6 +1,6 @@
 const Event = require("../structures/event.js");
 const config = require("../data/config.json");
-const { red, yellow } = require('chalk');
+const { yellow } = require('chalk');
 const { version } = require('../package.json');
 const mysql = require('mysql2');
 const util = require('util');
@@ -34,6 +34,6 @@ module.exports = new Event("ready", async(client) => {
         }, 5000);
 
     } catch (error) {
-        return console.log(red(`[EVENT] In the event ready an error has occurred -> ${error}`))
+        console.log(error);
     }
 });
