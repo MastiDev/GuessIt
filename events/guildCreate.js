@@ -17,8 +17,8 @@ const dbquery = util.promisify(con.query).bind(con);
 
 module.exports = new Event("guildCreate", async(client) => {
     try {
-
+        await dbquery(`INSERT IGNORE INTO guilds (id, guildid) VALUES (NULL, '${message.guild.id}')`);
     } catch (error) {
-        console.log(error);
+        return console.log(red(`[EVENT] In the event ready an error has occurred -> ${error}`))
     }
 });
