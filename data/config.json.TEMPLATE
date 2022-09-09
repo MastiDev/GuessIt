@@ -2,7 +2,8 @@
     "bot": {
         "token": "TOKEN",
         "intents": "0",
-        "eval": "0"
+        "eval": "0",
+        "embedcolor": "0"
     },
     "mysql": {
         "host": "HOST",

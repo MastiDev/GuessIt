@@ -5,9 +5,20 @@ const Discord = require('discord.js');
 const { MessageSelectMenu, MessageActionRow, MessageButton } = require('discord.js');
 const { version } = require('../package.json');
 const { red, green, blue, yellow, cyan, greenBright, redBright, grey, yellowBright, cyanBright, black, blueBright } = require('chalk');
-const mysql = require('mysql');
-const fs = require('fs')
-const talkedRecently = new Set();
+const mysql = require('mysql2');
+const util = require('util');
+
+var con = mysql.createPool({
+    multipleStatements: true,
+    insecureAuth: true,
+    host: `${config.mysql.host}`,
+    port: `${config.mysql.port}`,
+    user: `${config.mysql.user}`,
+    password: `${config.mysql.password}`,
+    database: `${config.mysql.database}`
+});
+
+const dbquery = util.promisify(con.query).bind(con);
 
 module.exports = new Command({
 	name: "delete",
@@ -16,25 +27,18 @@ module.exports = new Command({
 
 	async run(message, args, client) {
 		try {
+      if (!message.member.permissions.has("ADMINISTRATOR")) return message.channel.send("You don't have enough permissions!")
 
-            if (talkedRecently.has(message.author.id)) return message.reply("Wait 10 seconds!");
-
-            if(!message.member.permissions.has("ADMINISTRATOR")) return message.channel.send("You don't have enough permissions!")
-
-			con.query(`SELECT * FROM rounds WHERE id = ${args[1]} AND guildid = '${message.guild.id}'`, (err, rows) => {
-                if(!(rows)) return message.reply("Round not found!")
-
-                con.query(`DELETE FROM rounds WHERE id = ${args[1]} AND guildid = '${message.guild.id}'`)
-                message.reply(`Successfully delete round ${args[1]}`)
-            })
-
-            talkedRecently.add(message.author.id);
-            setTimeout(() => {
-              talkedRecently.delete(message.author.id);
-            }, 10000);
-
-		} catch (error) {
-			console.log(red(`[ERROR] In the command ${this.name} an error has occurred -> ${error}`))
-		}
+      let channel = message.mentions.channels.first();
+      if (!channel) return message.reply("You have to mention a channel!");
+      
+      let round = await dbquery(`SELECT * FROM rounds WHERE channelid = '${channel.id}' AND guildid = '${message.guild.id}'`)
+      if (round.length === 0) return message.reply("There is no round in this channel!")
+      
+      await dbquery(`DELETE FROM rounds WHERE channelid = '${channel.id}' AND guildid = '${message.guild.id}'`)
+      message.reply("The round has been deleted!")
+    } catch (error) {
+      console.log(error);
+    }
 	}
 });

@@ -108,4 +108,4 @@ dist
 ###                  ###
 ### FOR THIS PROJECT ###
 ###                  ###
-config.json
+data/config.json
