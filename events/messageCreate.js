@@ -1,5 +1,6 @@
 const Event = require("../structures/event.js");
 const config = require("../data/config.json");
+const Discord = require('discord.js');
 const mysql = require('mysql2');
 const util = require('util');
 
@@ -8,7 +9,8 @@ var con = mysql.createPool({
     port: `${config.mysql.port}`,
     user: `${config.mysql.user}`,
     password: `${config.mysql.password}`,
-    database: `${config.mysql.database}`
+    database: `${config.mysql.database}`,
+    multipleStatements: true
 });
 
 const dbquery = util.promisify(con.query).bind(con);
@@ -25,6 +27,8 @@ module.exports = new Event("messageCreate", async(client, message) => {
             if (!command) return //message.reply(`${args[0]} is not a valid command!`); //uncomment if you want that the bot replies when the command is not a valid command!
             command.run(message, args, client)
         } else {
+            await checkRounds(message.guild.id, message.channel.id, message)
+
             // Here you can add commands that are not have a prefix.
             // like when somebody pings the bot.
         }
@@ -46,3 +50,24 @@ async function getprefix(guildid) {
     }
     return rows[0].prefix;
 }
+
+async function checkRounds(guildid, channelid, message) {
+    let DateandTime = new Date()
+    let round = await dbquery(`SELECT * FROM rounds WHERE guildid = '${guildid}' AND channelid = '${channelid}'`)
+
+    if (round.length === 0) return; //message.reply("There is no round in this channel!");
+    if (!message.content === round[0].number) {
+        let sql1 = `UPDATE rounds SET trys = '${round[0].trys + 1}', lasttry = '${DateandTime.getTime()}' WHERE id = '${row.id}'`;
+        await dbquery(sql1);
+    } else {
+        const embed = new Discord.EmbedBuilder()
+        .setTitle(`🎉 Congratulations ${message.author.tag} 🎉`)
+        .setColor(`${config.bot.embedcolor}`)
+        .setDescription(`Congratulations you have guessed the correct number after ${round[0].trys} trys`)
+        .addFields(
+            {name: "Price", value: `\`\`\`${round[0].price}\`\`\``},
+        )
+        message.reply({embeds: [embed]});
+        await dbquery(`DELETE FROM rounds WHERE guildid = '${guildid}' AND channelid = '${channelid}'`);
+    };
+};
