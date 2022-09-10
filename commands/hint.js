@@ -24,6 +24,8 @@ module.exports = new Command({
 	async run(message, args, client) {
 		try {
             if (!message.member.permissions.has("ADMINISTRATOR")) return message.reply("You don't have the permission to use this command!");
+            if (!args[1]) return message.reply("Please specify a hint!\n`first` | `last` | `<number>`");
+            
             let round = await dbquery(`SELECT * FROM rounds WHERE guildid = '${message.guild.id}' AND channelid = '${message.channel.id}'`);
             if (round.length === 0) return message.reply("There is no round in this channel!");
 
