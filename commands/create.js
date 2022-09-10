@@ -33,7 +33,11 @@ module.exports = new Command({
             if (args[3] === undefined) return message.reply('You have to enter a price!');
             let price = args.slice(3).join(" ");
 
-            dbquery(`INSERT INTO rounds (id, guildid, channelid, number, price) VALUES (NULL, '${message.guild.id}', '${channel.id}', '${getRandomInt(args[2])}', '${price}')`)
+            // if game is already running in this channel return
+            let round = await dbquery(`SELECT * FROM rounds WHERE guildid = '${message.guild.id}' AND channelid = '${channel.id}'`);
+            if (round.length > 0) return message.reply("There is already a game running in this channel!");
+
+            dbquery(`INSERT INTO rounds (id, guildid, channelid, number, maxnumber, price) VALUES (NULL, '${message.guild.id}', '${channel.id}', '${getRandomInt(args[2])}', '${args[2]}', '${price}')`)
 
             let roundchannel = client.channels.cache.get(channel.id);
             let embed = new Discord.EmbedBuilder()

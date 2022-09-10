@@ -27,8 +27,7 @@ module.exports = new Event("messageCreate", async(client, message) => {
             if (!command) return //message.reply(`${args[0]} is not a valid command!`); //uncomment if you want that the bot replies when the command is not a valid command!
             command.run(message, args, client)
         } else {
-            await checkRounds(message.guild.id, message.channel.id, message)
-
+            if (!isNaN(message.content)) await checkRounds(message.guild.id, message.channel.id, message);
             // Here you can add commands that are not have a prefix.
             // like when somebody pings the bot.
         }
@@ -56,8 +55,11 @@ async function checkRounds(guildid, channelid, message) {
     let round = await dbquery(`SELECT * FROM rounds WHERE guildid = '${guildid}' AND channelid = '${channelid}'`)
 
     if (round.length === 0) return; //message.reply("There is no round in this channel!");
-    if (!message.content === round[0].number) {
-        let sql1 = `UPDATE rounds SET trys = '${round[0].trys + 1}', lasttry = '${DateandTime.getTime()}' WHERE id = '${row.id}'`;
+
+    if (round[0].number < parseInt(message.content)) return message.reply(`The number is lower than **${round[0].maxnumber}**!`);
+
+    if ((round[0].number != message.content)) {
+        let sql1 = `UPDATE rounds SET trys = '${round[0].trys + 1}', lasttry = '${DateandTime.getTime()}' WHERE id = ${round[0].id}`;
         await dbquery(sql1);
     } else {
         const embed = new Discord.EmbedBuilder()
