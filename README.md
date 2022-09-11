@@ -10,7 +10,7 @@ With this Simle Discord Bot, you can create games where you have to guess a numb
 1. Clone the repository
 2. Install the requirements with `npm install`
 3. Rename `config.json.example` to `config.json` and fill it
-4. Run the bot with `node index.js`
+4. Run the bot with `node index.js` the bot will create the tables on the first startup
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details
+This project is licensed under the MIT License
