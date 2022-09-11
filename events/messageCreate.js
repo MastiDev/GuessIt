@@ -59,7 +59,7 @@ async function checkRounds(guildid, channelid, message) {
     if (round[0].number < parseInt(message.content)) return message.reply(`The number is lower than **${round[0].maxnumber}**!`);
 
     if ((round[0].number != message.content)) {
-        let sql1 = `UPDATE rounds SET trys = '${round[0].trys + 1}', lasttry = '${DateandTime.getTime()}' WHERE id = ${round[0].id}`;
+        let sql1 = `UPDATE rounds SET trys = '${round[0].trys + 1}' WHERE id = ${round[0].id}`;
         await dbquery(sql1);
     } else {
         const embed = new Discord.EmbedBuilder()

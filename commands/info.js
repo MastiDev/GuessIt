@@ -38,7 +38,6 @@ module.exports = new Command({
                 { name: 'Channel', value: `[**Click here**](https://discord.com/channels/${message.guild.id}/${round[0].channelid})`, inline: true },
                 { name: 'Price', value: `**${round[0].price}**`, inline: true },
                 { name: 'Trys', value: `**${round[0].trys}**`, inline: true },
-                { name: 'Last Try', value: `**${round[0].lasttry}**`, inline: true },
             )
             message.reply({embeds: [embed]})
 		} catch (error) {

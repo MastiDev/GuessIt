@@ -28,7 +28,7 @@ module.exports = new Command({
 
             var roundlist = [];
             for (let i = 0; i < rounds.length; i++) {
-                roundlist.push(`\n<#${rounds[i].channelid}> | Price: ${rounds[i].price} | Trys: ${rounds[i].trys} | Last Try: ${rounds[i].lasttry}`)
+                roundlist.push(`\n<#${rounds[i].channelid}> 1-${rounds[i].maxnumber} | Price: ${rounds[i].price} | Trys: ${rounds[i].trys}`)
             }
 
             const embed = new Discord.EmbedBuilder()
