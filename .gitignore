@@ -104,8 +104,8 @@ dist
 .tern-port
 
 
-
 ###                  ###
 ### FOR THIS PROJECT ###
 ###                  ###
-data/config.json
+src/data/config.ts
+old

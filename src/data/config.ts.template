@@ -1,0 +1,9 @@
+const config = {
+	bot: {
+		prefix : '!',
+		token: 'TOKEN',
+		owner: '0',
+	},
+};
+
+export default config;
