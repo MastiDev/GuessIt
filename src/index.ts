@@ -1,4 +1,5 @@
 import { Client, GatewayIntentBits, Collection } from 'discord.js';
+import Enmap from 'enmap';
 import config from './data/config.js';
 
 import loadEvents from './handlers/events.js';
@@ -9,6 +10,8 @@ import { loadCronJobs } from './handlers/cronjobs.js';
 declare module 'discord.js' {
 	interface Client {
 		interaction: Collection<string, object>;
+		Eguilds: Enmap;
+		Eround: Enmap;
 	}
 }
 
@@ -23,7 +26,7 @@ const client = new Client({
 		GatewayIntentBits.GuildMessageTyping,
 		GatewayIntentBits.DirectMessages,
 	],
-	allowedMentions: { 
+	allowedMentions: {
 		repliedUser: false // This will allow the bot to ping the user who used the command
 	}
 });
@@ -31,6 +34,8 @@ const client = new Client({
 await client.login(config.bot.token);
 
 client.interaction = new Collection();
+client.Eguilds = new Enmap({name: 'guilds', dataDir: './dist/data'});
+client.Eround = new Enmap({name: 'rounds', dataDir: './dist/data'});
 
 await loadEvents(client);
 await loadInteractions('./dist/interactions', client);
