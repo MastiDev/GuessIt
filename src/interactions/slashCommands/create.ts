@@ -48,6 +48,9 @@ export default {
 			const dcChannel = await client.channels.fetch(channelid);
 			if (!dcChannel) return  interaction.channel.send('VALIDE2');
 
+			const round = client.Eround.get(channelid);
+			if (round) return interaction.channel.send('Gibts schon');
+
 			await channel.delete();
 			await editEmbed(createEmbed, channel.content, 'Pending', 'Pending', 'Please provide the range within which the game will be played. The range can be between 1 and 1,000,000');
 			await interaction.editReply({embeds: [createEmbed]});
@@ -70,7 +73,21 @@ export default {
 			await editEmbed(createEmbed, channel.content, number.content, price.content, 'Thx');
 			await interaction.editReply({embeds: [createEmbed]});
 
-			interaction.channel.send(`${channel} ${number} ${price}`);
+
+			const guessNumber = generateRandomNumber(parseInt(number.content));
+			const roundChannel = client.channels.cache.get(channel.id);
+
+			client.Eround.set(channelid, {
+				channelId: channelid,
+				max: number.content,
+				number: guessNumber,
+				price: price.content
+			});
+
+			const embed = new EmbedBuilder()
+				.setTitle('New Round')
+				.setDescription(`A new round has been created in this channel! \nThe Number is between **1** and **${number.content}**!\nThe Price is **${price.content}**!`);
+			roundChannel?.send({embeds: [embed]});
 
 		} catch (error) {
 			console.log(error);
@@ -124,4 +141,8 @@ function isValidNumber(input: string) {
 	if (number.toString() !== input) return false;
 
 	return true;
+}
+
+function generateRandomNumber(max:number) {
+	return Math.floor(Math.random() * max) + 1;
 }
