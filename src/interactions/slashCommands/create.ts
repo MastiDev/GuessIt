@@ -11,7 +11,7 @@ export default {
 		.setDescription('create'),
 	async execute(client: Client, interaction: ChatInputCommandInteraction) {
 		try {
-			if (!interaction.channel) return;
+			if (!interaction.channel || !interaction.guildId) return;
 
 			const createEmbed = new EmbedBuilder({
 				title: 'GuessIt',
@@ -37,7 +37,6 @@ export default {
 
 			const filter = (m: Message) => m.author.id === interaction.user.id;
 			await interaction.reply({embeds: [createEmbed]});
-
 
 			const channel = await collectMessage(interaction.channel, filter, 60000);
 			if (!channel) return interaction.channel.send('test');
@@ -75,7 +74,6 @@ export default {
 
 
 			const guessNumber = generateRandomNumber(parseInt(number.content));
-			const roundChannel = client.channels.cache.get(channel.id);
 
 			client.Eround.set(channelid, {
 				channelId: channelid,
@@ -84,11 +82,12 @@ export default {
 				price: price.content
 			});
 
-			const embed = new EmbedBuilder()
-				.setTitle('New Round')
-				.setDescription(`A new round has been created in this channel! \nThe Number is between **1** and **${number.content}**!\nThe Price is **${price.content}**!`);
-			roundChannel?.send({embeds: [embed]});
+			const checkIfEmpty = client.Eguilds.get(interaction.guildId);
+			if (!checkIfEmpty) client.Eguilds.set(interaction.guildId, []);
 
+			client.Eguilds.push(interaction.guildId, channelid);
+
+			//TODO: Send Message to game channel
 		} catch (error) {
 			console.log(error);
 		}
