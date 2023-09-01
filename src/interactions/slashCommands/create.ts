@@ -76,6 +76,7 @@ export default {
 			const guessNumber = generateRandomNumber(parseInt(number.content));
 
 			client.Eround.set(channelid, {
+				guildId: interaction.guildId,
 				channelId: channelid,
 				max: number.content,
 				number: guessNumber,
