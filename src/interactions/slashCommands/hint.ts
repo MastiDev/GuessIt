@@ -36,9 +36,6 @@ export default {
 			const hintCategory = interaction.options.getSubcommand();
 			if (!hintCategory) return interaction.reply('You need to enter a Hint Category');
 
-			const commandNumber = interaction.options.getString('number');
-			if (!commandNumber) return interaction.reply('You need to enter a Number');
-
 			const channel = interaction.options.getChannel('channel');
 			if (!channel) return interaction.reply('Please mention a channel!');
 
@@ -62,6 +59,9 @@ export default {
 				await interaction.reply({ embeds: [lastNumberEmbed] });
 
 			} else {
+
+				const commandNumber = interaction.options.getString('number');
+				if (!commandNumber) return interaction.reply('You need to enter a Number');
 
 				if (isNaN(Number(commandNumber))) return interaction.reply('Please provide a valid number!');
 
