@@ -44,11 +44,11 @@ async function checkRounds(client: Client, channelid: string, message: Message) 
 		if (round.max < parseInt(message.content)) return message.reply(`The number is lower than **${round.max}**!`);
 
 		if (round.number != message.content) {
-			// TODO: Add stats
+			client.Eround.math(channelid, '+', 1, 'trys');
 		} else {
 			const embed = new EmbedBuilder()
 				.setTitle(`🎉 Congratulations ${message.author.tag} 🎉`)
-				.setDescription('Congratulations you have guessed the correct number after TODO-ADD-TRYS trys')
+				.setDescription(`Congratulations you have guessed the correct number after **${round.trys}** trys`)
 				.addFields(
 					{name: 'Price', value: `\`\`\`${round.price}\`\`\``},
 				);

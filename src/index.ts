@@ -45,3 +45,7 @@ await loadCronJobs('./dist/cron', client);
 process.on('uncaughtException', function (err) {
 	console.error(err);
 });
+
+// TODO: Update all Embed texts
+// TODO: Add more hint options
+// TODO: Make hint cmd only avalible in game channels

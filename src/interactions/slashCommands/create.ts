@@ -1,4 +1,4 @@
-import { Client, ChatInputCommandInteraction, TextBasedChannel, Message } from 'discord.js';
+import { Client, ChatInputCommandInteraction, TextBasedChannel, TextChannel, Message } from 'discord.js';
 import { SlashCommandBuilder, EmbedBuilder } from '@discordjs/builders';
 
 const commandID = 'create';
@@ -39,27 +39,27 @@ export default {
 			await interaction.reply({embeds: [createEmbed]});
 
 			const channel = await collectMessage(interaction.channel, filter, 60000);
-			if (!channel) return interaction.channel.send('test');
+			if (!channel) return interaction.channel.send('You need to mention a Valid Channel!');
 
 			const channelid = channel.mentions.channels.first()?.id;
-			if (!channelid) return interaction.channel.send('VALIDE');
+			if (!channelid) return interaction.channel.send('You need to mention a Valid Channel!');
 
 			const dcChannel = await client.channels.fetch(channelid);
-			if (!dcChannel) return  interaction.channel.send('VALIDE2');
+			if (!dcChannel) return  interaction.channel.send('You need to mention a Valid Channel!');
 
 			const round = client.Eround.get(channelid);
-			if (round) return interaction.channel.send('Gibts schon');
+			if (round) return interaction.channel.send('A game is already in progress on this channel.');
 
 			await channel.delete();
-			await editEmbed(createEmbed, channel.content, 'Pending', 'Pending', 'Please provide the range within which the game will be played. The range can be between 1 and 1,000,000');
+			await editEmbed(createEmbed, channel.content, 'Pending', 'Pending', 'Please provide the range within which the game will be played. The range can be between 1 and 1,000,000,000,000,000');
 			await interaction.editReply({embeds: [createEmbed]});
 
 
 			const number = await collectMessage(interaction.channel, filter, 60000);
-			if (!number) return interaction.channel.send('test2');
+			if (!number) return interaction.channel.send('Please provide a valid number.');
 
 			const numberCheck = isValidNumber(number.content);
-			if (!numberCheck) return interaction.channel.send('VALIDEEE2');
+			if (!numberCheck) return interaction.channel.send('Please provide a valid number.');
 
 			await number.delete();
 			await editEmbed(createEmbed, channel.content, number.content, 'Pending', 'Please indicate the price for the game');
@@ -69,7 +69,7 @@ export default {
 			const price = await collectMessage(interaction.channel, filter, 60000);
 			if (!price) return interaction.channel.send('test3');
 			await price.delete();
-			await editEmbed(createEmbed, channel.content, number.content, price.content, 'Thx');
+			await editEmbed(createEmbed, channel.content, number.content, price.content, 'All values are valid, and the game has now started.');
 			await interaction.editReply({embeds: [createEmbed]});
 
 
@@ -80,7 +80,8 @@ export default {
 				channelId: channelid,
 				max: number.content,
 				number: guessNumber,
-				price: price.content
+				price: price.content,
+				trys: 0
 			});
 
 			const checkIfEmpty = client.Eguilds.get(interaction.guildId);
@@ -88,7 +89,13 @@ export default {
 
 			client.Eguilds.push(interaction.guildId, channelid);
 
-			//TODO: Send Message to game channel
+			const gameEmbed = new EmbedBuilder({
+				title: 'Game started',
+				description: `The game has begun! The prize for this game is **${price.content}**, and the range is between 1 and **${number.content}**.`,
+			});
+
+			const gameChannel = <TextChannel>client.channels.cache.get(channelid);
+			await gameChannel?.send({embeds: [gameEmbed]});
 		} catch (error) {
 			console.log(error);
 		}
@@ -135,12 +142,8 @@ function isValidNumber(input: string) {
 	const number = parseInt(input, 10);
 
 	if (isNaN(number)) return false;
-
-	if (number < 1 || number > 1000000) return false;
-
-	if (number.toString() !== input) return false;
-
-	return true;
+	if (number < 1 || number > 1000000000000000) return false;
+	return number.toString() === input;
 }
 
 function generateRandomNumber(max:number) {

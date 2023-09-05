@@ -1,7 +1,7 @@
-# GuessIt
+# GuessIt 
 
 ## Description
-With this Simle Discord Bot, you can create games where you have to guess a number between your specified range.
+With this Simple Discord Bot, you can create games where you have to guess a number between your specified range.
 
 ## Preqrequisites
 1. Node.js v18.7.0 or newer is required.
