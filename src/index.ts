@@ -47,5 +47,3 @@ process.on('uncaughtException', function (err) {
 });
 
 // TODO: Update all Embed texts
-// TODO: Add more hint options
-// TODO: Make hint cmd only avalible in game channels

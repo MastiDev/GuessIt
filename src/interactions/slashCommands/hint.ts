@@ -1,7 +1,8 @@
-import { Client, ChatInputCommandInteraction, PermissionFlagsBits } from 'discord.js';
+import {Client, ChatInputCommandInteraction, PermissionFlagsBits} from 'discord.js';
 import { SlashCommandBuilder, EmbedBuilder } from '@discordjs/builders';
 
 const commandID = 'hint';
+
 export default {
 	id: commandID,
 	type: 'slashCommand',
@@ -12,19 +13,30 @@ export default {
 		.setDefaultMemberPermissions(PermissionFlagsBits['Administrator'])
 		.addSubcommand(subcommand =>
 			subcommand
-				.setName('first')
-				.setDescription('First')
-				.addChannelOption(option => option.setName('channel').setDescription('Channel').setRequired(true)))
+				.setName('compare')
+				.setDescription('This hint reveals whether the number being sought is greater or smaller than a reference number.')
+				.addStringOption( number =>
+					number
+						.setName('number')
+						.setDescription('Number')
+						.setRequired(true)
+				))
 		.addSubcommand(subcommand =>
 			subcommand
-				.setName('last')
-				.setDescription('Last')
-				.addChannelOption(option => option.setName('channel').setDescription('Channel').setRequired(true)))
+				.setName('parity')
+				.setDescription('This hint informs whether the number being sought is even or not.'))
 		.addSubcommand(subcommand =>
 			subcommand
-				.setName('number')
-				.setDescription('Number')
-				.addChannelOption(option => option.setName('channel').setDescription('Channel').setRequired(true))
+				.setName('digitsum')
+				.setDescription('With this command, players can find the digit sum of the sought number.'))
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('prime')
+				.setDescription('This command tells players whether the sought number is a prime number or not.'))
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('digitsinnumber')
+				.setDescription('This command indicates whether specific digits are present in the number.')
 				.addStringOption( number =>
 					number
 						.setName('number')
@@ -36,30 +48,12 @@ export default {
 			const hintCategory = interaction.options.getSubcommand();
 			if (!hintCategory) return interaction.reply('You need to enter a Hint Category');
 
-			const channel = interaction.options.getChannel('channel');
-			if (!channel) return interaction.reply('Please mention a channel!');
+			if (!interaction.channel?.id) return interaction.reply('In this Channel is no Round');
 
-			const round = client.Eround.get(channel.id);
-			if (!round) return  interaction.reply('In this Channel is no Round');
+			const round = client.Eround.get(interaction.channel?.id);
+			if (!round) return interaction.reply('In this Channel is no Round');
 
-			if(hintCategory === 'first') {
-
-				const firstNumber = round.number.toString().split('');
-				const firstNumberEmbed = new EmbedBuilder()
-					.setTitle('Hint')
-					.setDescription(`The first digit is **${firstNumber[0]}**!`);
-				await interaction.reply({embeds: [firstNumberEmbed]});
-
-			} else if (hintCategory === 'last') {
-
-				const lastNumber = round.number.toString();
-				const lastNumberEmbed = new EmbedBuilder()
-					.setTitle('Hint')
-					.setDescription(`The last digit is **${lastNumber.charAt(lastNumber.length - 1)}**!`);
-				await interaction.reply({ embeds: [lastNumberEmbed] });
-
-			} else {
-
+			if (hintCategory === 'compare') {
 				const commandNumber = interaction.options.getString('number');
 				if (!commandNumber) return interaction.reply('You need to enter a Number');
 
@@ -76,12 +70,55 @@ export default {
 						.setDescription(`The number is higher than **${commandNumber}**!`);
 					await interaction.reply({embeds: [hint]});
 				} else {
+					await interaction.reply({ephemeral: true, content: 'This is the number :)'});
+				}
+			} else if (hintCategory === 'parity') {
+				const hint = new EmbedBuilder()
+					.setTitle('Hint');
+
+				if (isEven(round.number)) {
+					hint.setDescription('The number is **Even**!');
+				} else hint.setDescription('The number is **Odd**!');
+
+				await interaction.reply({embeds: [hint]});
+			} else if (hintCategory === 'digitsum') {
+				const number = round.number.toString().split('');
+				let digitsum = 0;
+				for (let i = 0; i < number.length; i++) {
+					digitsum = digitsum + parseInt(number[i]);
+				}
+				const hint = new EmbedBuilder()
+					.setTitle('Hint')
+					.setDescription(`The digitsum is **${digitsum}**!`);
+				await interaction.reply({embeds: [hint]});
+			} else if (hintCategory === 'prime') {
+				const hint = new EmbedBuilder()
+					.setTitle('Hint');
+				if (isPrime(round.number)) {
+					hint.setDescription('The number is a **prime** number.');
+				} else hint.setDescription('The number is **not** a prime number.');
+
+				await interaction.reply({embeds: [hint]});
+			} else if (hintCategory === 'digitsinnumber') {
+				const commandNumber = interaction.options.getString('number');
+				if (!commandNumber) return interaction.reply('You need to enter a Number');
+
+				const number = parseInt(commandNumber);
+
+				if (number < 0 || number > 9) return console.log('Please provide a number between 0-9');
+
+				const roundNumberArray = round.number.toString();
+
+				if (roundNumberArray.includes('.')) return console.log('Please provide a number between 0-9');
+				if (roundNumberArray.includes(number.toString())) {
 					const hint = new EmbedBuilder()
 						.setTitle('Hint')
-						.setDescription(`The number is **${commandNumber}**.....`);
+						.setDescription(`The number contain the digit ${number}.`);
 					await interaction.reply({embeds: [hint]});
+				} else {
+					console.log(`The number does not contain the digit ${number}.`);
+					return false;
 				}
-
 			}
 
 		} catch (error) {
@@ -89,3 +126,21 @@ export default {
 		}
 	}
 };
+
+function isEven(n:number) {
+	return n % 2 === 0;
+}
+
+function isPrime (n:number) {
+	if (n <= 1) {
+		return false;
+	}
+	for (let i = 2; i <= Math.sqrt(n); i++) {
+		if (n % i === 0) {
+			return false;
+		}
+	}
+	return true;
+}
+
+// TODO: Insert hints in channel description
