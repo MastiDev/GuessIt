@@ -1,15 +1,15 @@
 import { Client, ChatInputCommandInteraction } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 
-const commandID = 'ping';
+const commandID = 'hello';
 export default {
 	id: commandID,
 	type: 'slashCommand',
 	disabled: false,
 	data: new SlashCommandBuilder()
 		.setName(commandID)
-		.setDescription('Ping!'),
+		.setDescription('Replies with Hello World!'),
 	async execute(client: Client, interaction: ChatInputCommandInteraction) {
-		interaction.reply('Pong!');
+		await interaction.reply('Hello World!');
 	}
 };

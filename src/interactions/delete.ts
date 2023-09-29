@@ -1,5 +1,5 @@
-import { Client, ChatInputCommandInteraction, TextBasedChannel, Message } from 'discord.js';
-import { SlashCommandBuilder, EmbedBuilder } from '@discordjs/builders';
+import { Client, ChatInputCommandInteraction } from 'discord.js';
+import { SlashCommandBuilder } from '@discordjs/builders';
 
 const commandID = 'delete';
 export default {

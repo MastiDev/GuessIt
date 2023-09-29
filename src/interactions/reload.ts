@@ -1,10 +1,10 @@
-import config from '../../data/config.js';
+import config from '../data/config.js';
 import { Client, ChatInputCommandInteraction } from 'discord.js';
 import { SlashCommandBuilder, EmbedBuilder } from '@discordjs/builders';
 import chalk from 'chalk';
 
-import loadInteractions from '../../handlers/handler.js';
-import registerApplicationCommands from '../../handlers/application.js';
+import loadInteractions from '../handlers/handler.js';
+import registerApplicationCommands from '../handlers/application.js';
 
 const commandID = 'reload';
 export default {

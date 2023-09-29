@@ -1,7 +1,6 @@
-import { inspect } from 'util';
 import { Client, ChatInputCommandInteraction } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
-import config from '../../data/config.js';
+import config from '../data/config.js';
 
 const commandID = 'eval';
 export default {
@@ -22,9 +21,9 @@ export default {
 				const evaled = eval(input);
 				const cleaned = await clean(evaled);
 
-				interaction.reply(`\`\`\`js\n${cleaned}\n\`\`\``);
+				await interaction.reply(`\`\`\`js\n${cleaned}\n\`\`\``);
 			} catch (error) {
-				interaction.reply(`\`ERROR\` \`\`\`xl\n${error}\n\`\`\``);
+				await interaction.reply(`\`ERROR\` \`\`\`xl\n${error}\n\`\`\``);
 			}
 
 		} catch (error) {
@@ -36,13 +35,8 @@ export default {
 const clean = async (text: string) => {
 
 	if (text && text.constructor.name == 'Promise')
-		text = await text;
-
-	if (typeof text !== 'string')
-		text = inspect(text, { depth: 1 });
-
-	text = text
-		.replace(/`/g, '`' + String.fromCharCode(8203))
-		.replace(/@/g, '@' + String.fromCharCode(8203));
+		text = text
+			.replace(/`/g, '`' + String.fromCharCode(8203))
+			.replace(/@/g, '@' + String.fromCharCode(8203));
 	return text;
 };

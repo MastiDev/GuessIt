@@ -6,12 +6,12 @@ const rest = new REST({ version: '10' }).setToken(config.bot.token);
 
 async function registerApplicationCommands(client: Client) {
 	try {
-		if (!client.user) throw new Error('User not available in the client.');
+		if (!client.user) return console.log('User not available in the client.');
 
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const commands = new Map<string, any>();
 		for (const [key, value] of client.interaction) {
-			if (typeof key === 'string' && (key.startsWith('slashCommand-') || key.startsWith('contextMenu-'))) {
+			if ((key.startsWith('slashCommand-') || key.startsWith('contextMenu-'))) {
 				commands.set(key, value);
 			}
 		}

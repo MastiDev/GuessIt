@@ -13,10 +13,10 @@ export default {
 		try {
 			const roundList: string[] = [];
 
-			client.Eround.forEach((value, key) => {
+			client.Eround.forEach((value) => {
 				roundList.push(`\n<#${value.channelId}> 1-${value.max} | Price: ${value.price}`);
 			});
-			if (roundList.length === 0) roundList.push('NADA')
+			if (roundList.length === 0) roundList.push('NADA');
 
 			const embed = new EmbedBuilder()
 				.setTitle('Round List')

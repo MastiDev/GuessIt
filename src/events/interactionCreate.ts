@@ -30,7 +30,7 @@ export default {
 			const action = client.interaction.get(`${interactionType}-${interaction.customId || interaction.commandName}`) as CustomInteraction;
 			if (!action) return;
 			try {
-				action.execute(client, interaction);
+				await action.execute(client, interaction);
 			} catch (error) {
 				interaction.reply({ content: 'There was an error while executing this context menu!', ephemeral: true });
 				console.log(error);
