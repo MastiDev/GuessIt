@@ -8,20 +8,19 @@ export default {
 	disabled: false,
 	data: new SlashCommandBuilder()
 		.setName(commandID)
-		.setDescription('info')
-		.addChannelOption(option => option.setName('channel').setDescription('Channel').setRequired(true)),
+		.setDescription('Displays information about the ongoing round'),
 	async execute(client: Client, interaction: ChatInputCommandInteraction) {
 		try {
-			const channel = interaction.options.getChannel('channel');
+			const channel = interaction.channel?.id;
 			if (!channel) return interaction.reply('You have to mention a channel!');
 
-			const round = client.Eround.get(channel.id);
+			const round = client.Eround.get(channel);
 			if (!round) return  interaction.reply('In this Channel is no Round');
 
 			const embed = new EmbedBuilder()
+				.setColor(0xF1FF00)
 				.setTitle('Round Info')
 				.addFields(
-					{ name: 'Channel', value: `[**Click here**](https://discord.com/channels/${interaction.guildId}/${round.channelId})`, inline: true },
 					{ name: 'Price', value: `**${round.price}**`, inline: true },
 					{ name: 'Range', value: `**1-${round.max}**`, inline: true },
 				);

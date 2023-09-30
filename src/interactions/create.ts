@@ -1,4 +1,4 @@
-import { Client, ChatInputCommandInteraction, TextBasedChannel, TextChannel, Message } from 'discord.js';
+import { Client, ChatInputCommandInteraction, TextBasedChannel, TextChannel, Message, PermissionFlagsBits } from 'discord.js';
 import { SlashCommandBuilder, EmbedBuilder } from '@discordjs/builders';
 
 const commandID = 'create';
@@ -8,12 +8,14 @@ export default {
 	disabled: false,
 	data: new SlashCommandBuilder()
 		.setName(commandID)
-		.setDescription('create'),
+		.setDescription('Initiates the setup process for creating a new round')
+		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 	async execute(client: Client, interaction: ChatInputCommandInteraction) {
 		try {
 			if (!interaction.channel || !interaction.guildId) return;
 
 			const createEmbed = new EmbedBuilder({
+				color: 0xF1FF00,
 				title: 'GuessIt',
 				description: 'Please mention the channel where the game will be started',
 				fields: [
@@ -90,6 +92,7 @@ export default {
 			client.Eguilds.push(interaction.guildId, channelid);
 
 			const gameEmbed = new EmbedBuilder({
+				color: 0x2EFF00,
 				title: 'Game started',
 				description: `The game has begun! The prize for this game is **${price.content}**, and the range is between 1 and **${number.content}**.`,
 			});

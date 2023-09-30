@@ -8,7 +8,7 @@ export default {
 	disabled: false,
 	data: new SlashCommandBuilder()
 		.setName(commandID)
-		.setDescription('Ping!'),
+		.setDescription('Pong!'),
 	async execute(client: Client, interaction: ChatInputCommandInteraction) {
 		await interaction.reply('Pong!');
 	}

@@ -1,5 +1,5 @@
 import config from '../data/config.js';
-import { Client, ChatInputCommandInteraction } from 'discord.js';
+import { Client, ChatInputCommandInteraction, PermissionFlagsBits } from 'discord.js';
 import { SlashCommandBuilder, EmbedBuilder } from '@discordjs/builders';
 import chalk from 'chalk';
 
@@ -13,7 +13,8 @@ export default {
 	disabled: false,
 	data: new SlashCommandBuilder()
 		.setName(commandID)
-		.setDescription('Reloads all commands'),
+		.setDescription('Reloads all commands')
+		.setDefaultMemberPermissions(PermissionFlagsBits['Administrator']),
 	async execute(client: Client, interaction: ChatInputCommandInteraction) {
 		if (interaction.user.id !== config.bot.owner) return interaction.reply('You do not have the permission to use this command!');
 

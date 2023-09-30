@@ -1,5 +1,5 @@
 import { Client, ChatInputCommandInteraction } from 'discord.js';
-import { SlashCommandBuilder } from '@discordjs/builders';
+import {EmbedBuilder, SlashCommandBuilder} from '@discordjs/builders';
 
 const commandID = 'delete';
 export default {
@@ -8,19 +8,22 @@ export default {
 	disabled: false,
 	data: new SlashCommandBuilder()
 		.setName(commandID)
-		.addChannelOption(option => option.setName('channel').setDescription('Channel').setRequired(true))
-		.setDescription('delete'),
+		.setDescription('Deletes the current round in the channel where it is executed'),
 	async execute(client: Client, interaction: ChatInputCommandInteraction) {
 		try {
-			const channel = interaction.options.getChannel('channel');
+			const channel = interaction.channel?.id;
 			if (!channel) return interaction.reply('You have to mention a channel!');
 
-			const round = client.Eround.get(channel.id);
+			const round = client.Eround.get(channel);
 			if (!round) return  interaction.reply('In this Channel is no Round');
 
-			client.Eround.delete(channel.id);
+			client.Eround.delete(channel);
 
-			await interaction.reply('The round has been deleted!');
+			const embed = new EmbedBuilder()
+				.setColor(0xFF0000)
+				.setTitle('Round Deleted');
+
+			await interaction.reply({embeds: [embed]});
 		} catch (error) {
 			console.log(error);
 		}

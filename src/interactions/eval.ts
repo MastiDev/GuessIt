@@ -1,4 +1,4 @@
-import { Client, ChatInputCommandInteraction } from 'discord.js';
+import { Client, ChatInputCommandInteraction, PermissionFlagsBits } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import config from '../data/config.js';
 
@@ -10,7 +10,8 @@ export default {
 	data: new SlashCommandBuilder()
 		.addStringOption(option => option.setName('input').setDescription('The input to echo back'))
 		.setName(commandID)
-		.setDescription('Evaluate code'),
+		.setDescription('Evaluate code')
+		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 	async execute(client: Client, interaction: ChatInputCommandInteraction) {
 		try {
 			if(interaction.user.id !== config.bot.owner) return interaction.reply('You do not have permission to use this command.');

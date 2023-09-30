@@ -46,4 +46,5 @@ process.on('uncaughtException', function (err) {
 	console.error(err);
 });
 
-// TODO: Update all Embed texts
+// Add hints do /info and DB
+// Add Hints to discord channel info
