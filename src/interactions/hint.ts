@@ -1,4 +1,4 @@
-import {Client, ChatInputCommandInteraction, PermissionFlagsBits} from 'discord.js';
+import { Client, ChatInputCommandInteraction, PermissionFlagsBits, TextChannel} from 'discord.js';
 import { SlashCommandBuilder, EmbedBuilder } from '@discordjs/builders';
 
 const commandID = 'hint';
@@ -66,12 +66,14 @@ export default {
 						.setTitle('Hint')
 						.setDescription(`The number is lower than **${commandNumber}**`);
 					await interaction.reply({embeds: [hint]});
+					await updateHintString(client, interaction.channel.id, `The number is lower than **${commandNumber}**`);
 				} else if (round.number > parseInt(commandNumber)) {
 					const hint = new EmbedBuilder()
 						.setColor(0xF1FF00)
 						.setTitle('Hint')
 						.setDescription(`The number is higher than **${commandNumber}**`);
 					await interaction.reply({embeds: [hint]});
+					await updateHintString(client, interaction.channel.id, `The number is higher than **${commandNumber}**`);
 				} else {
 					await interaction.reply({ephemeral: true, content: 'This is the number :)'});
 				}
@@ -84,8 +86,11 @@ export default {
 
 				if (isEven(round.number)) {
 					hint.setDescription('The number is **Even**');
-				} else hint.setDescription('The number is **Odd**');
-
+					await updateHintString(client, interaction.channel.id, 'The number is **Even**');
+				} else {
+					hint.setDescription('The number is **Odd**');
+					await updateHintString(client, interaction.channel.id, 'The number is **Odd**');
+				}
 				await interaction.reply({embeds: [hint]});
 
 			} else if (hintCategory === 'digitsum') {
@@ -100,6 +105,7 @@ export default {
 					.setTitle('Hint')
 					.setDescription(`The digitsum is **${digitsum}**`);
 				await interaction.reply({embeds: [hint]});
+				await updateHintString(client, interaction.channel.id, `The digitsum is **${digitsum}**`);
 
 			} else if (hintCategory === 'prime') {
 
@@ -108,8 +114,11 @@ export default {
 					.setTitle('Hint');
 				if (isPrime(round.number)) {
 					hint.setDescription('The number is a **prime** number');
-				} else hint.setDescription('The number is **not** a prime number');
-
+					await updateHintString(client, interaction.channel.id, 'The number is a **prime** number');
+				} else {
+					hint.setDescription('The number is **not** a prime number');
+					await updateHintString(client, interaction.channel.id, 'The number is **not** a prime number');
+				}
 				await interaction.reply({embeds: [hint]});
 
 			} else if (hintCategory === 'digitsinnumber') {
@@ -130,9 +139,14 @@ export default {
 						.setTitle('Hint')
 						.setDescription(`The number contain the digit ${number}`);
 					await interaction.reply({embeds: [hint]});
+					await updateHintString(client, interaction.channel.id, `The number contain the digit ${number}`);
 				} else {
-					console.log(`The number does not contain the digit ${number}`);
-					return false;
+					const hint = new EmbedBuilder()
+						.setColor(0xF1FF00)
+						.setTitle('Hint')
+						.setDescription(`The number does not contain the digit ${number}`);
+					await interaction.reply({embeds: [hint]});
+					await updateHintString(client, interaction.channel.id, `The number does not contain the digit ${number}`);
 				}
 			}
 
@@ -156,4 +170,20 @@ function isPrime (n:number) {
 		}
 	}
 	return true;
+}
+
+async function updateHintString(client: Client, channelid: string, hint: string) {
+	try {
+		const round = client.Eround.get(channelid);
+		const newhint = round.hints + `${hint}\n`;
+		client.Eround.set(channelid, newhint, 'hints');
+
+		const channel = await client.channels.fetch(channelid) as TextChannel;
+		if (!channel) return;
+
+		const topic = `In this channel is currently hosting a game of **Guess it.** The range is **1-${round.max}**, and the prize for guessing correctly is: **${round.price}**\n\n**Hints:**\n${round.hints}`;
+		await channel.edit({topic: topic});
+	} catch (err) {
+		return console.log(err);
+	}
 }

@@ -45,6 +45,3 @@ await loadCronJobs('./dist/cron', client);
 process.on('uncaughtException', function (err) {
 	console.error(err);
 });
-
-// Add hints do /info and DB
-// Add Hints to discord channel info

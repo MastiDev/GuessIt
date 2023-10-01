@@ -20,6 +20,7 @@ export default {
 			const embed = new EmbedBuilder()
 				.setColor(0xF1FF00)
 				.setTitle('Round Info')
+				.setDescription(round.hints)
 				.addFields(
 					{ name: 'Price', value: `**${round.price}**`, inline: true },
 					{ name: 'Range', value: `**1-${round.max}**`, inline: true },

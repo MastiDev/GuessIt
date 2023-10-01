@@ -83,7 +83,8 @@ export default {
 				max: number.content,
 				number: guessNumber,
 				price: price.content,
-				trys: 0
+				trys: 0,
+				hints: ''
 			});
 
 			const checkIfEmpty = client.Eguilds.get(interaction.guildId);
@@ -99,6 +100,8 @@ export default {
 
 			const gameChannel = <TextChannel>client.channels.cache.get(channelid);
 			await gameChannel?.send({embeds: [gameEmbed]});
+			const topic = `In this channel is currently hosting a game of **Guess it.** The range is **1-${number.content}**, and the prize for guessing correctly is: **${price.content}**\n\n**Hints:**\n`;
+			await gameChannel?.edit({topic: topic});
 		} catch (error) {
 			console.log(error);
 		}
