@@ -1,6 +1,6 @@
 {
   "name": "guess-it",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "🔢 Simple Guess-It Discord Bot",
   "main": "./dist/index.js",
   "exports": "./dist/index.js",
