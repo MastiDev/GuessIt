@@ -83,15 +83,15 @@ export default {
 				const hint = new EmbedBuilder()
 					.setColor(0xF1FF00)
 					.setTitle('Hint');
-
 				if (isEven(round.number)) {
 					hint.setDescription('The number is **Even**');
+					await interaction.reply({embeds: [hint]});
 					await updateHintString(client, interaction.channel.id, 'The number is **Even**');
 				} else {
 					hint.setDescription('The number is **Odd**');
+					await interaction.reply({embeds: [hint]});
 					await updateHintString(client, interaction.channel.id, 'The number is **Odd**');
 				}
-				await interaction.reply({embeds: [hint]});
 
 			} else if (hintCategory === 'digitsum') {
 
@@ -114,12 +114,13 @@ export default {
 					.setTitle('Hint');
 				if (isPrime(round.number)) {
 					hint.setDescription('The number is a **prime** number');
+					await interaction.reply({embeds: [hint]});
 					await updateHintString(client, interaction.channel.id, 'The number is a **prime** number');
 				} else {
 					hint.setDescription('The number is **not** a prime number');
+					await interaction.reply({embeds: [hint]});
 					await updateHintString(client, interaction.channel.id, 'The number is **not** a prime number');
 				}
-				await interaction.reply({embeds: [hint]});
 
 			} else if (hintCategory === 'digitsinnumber') {
 
@@ -181,8 +182,8 @@ async function updateHintString(client: Client, channelid: string, hint: string)
 		const channel = await client.channels.fetch(channelid) as TextChannel;
 		if (!channel) return;
 
-		const topic = `In this channel is currently hosting a game of **Guess it.** The range is **1-${round.max}**, and the prize for guessing correctly is: **${round.price}**\n\n**Hints:**\n${round.hints}`;
-		await channel.edit({topic: topic});
+		const topic = `In this channel is currently hosting a game of **Guess it.** The range is **1-${round.max}**, and the prize for guessing correctly is: **${round.price}**\n\n**Hints:**${round.hints}`;
+		return await channel.edit({topic: topic});
 	} catch (err) {
 		return console.log(err);
 	}

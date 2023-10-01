@@ -56,7 +56,7 @@ export default {
 			if (round) return interaction.channel.send('A game is already in progress on this channel.');
 
 			await channel.delete();
-			await editEmbed(createEmbed, channel.content, 'Pending', 'Pending', 'Please provide the range within which the game will be played. The range can be between 1 and 1,000,000,000,000,000');
+			await editEmbed(createEmbed, channel.content, 'Pending', 'Pending', 'Please provide the range within which the game will be played.');
 			await interaction.editReply({embeds: [createEmbed]});
 
 
@@ -87,7 +87,7 @@ export default {
 				number: guessNumber,
 				price: price.content,
 				trys: 0,
-				hints: ''
+				hints: '\n'
 			});
 
 			const checkIfEmpty = client.Eguilds.get(interaction.guildId);
@@ -103,7 +103,7 @@ export default {
 
 			const gameChannel = <TextChannel>client.channels.cache.get(channelid);
 			await gameChannel?.send({embeds: [gameEmbed]});
-			const topic = `In this channel is currently hosting a game of **Guess it.** The range is **1-${number.content}**, and the prize for guessing correctly is: **${price.content}**\n\n**Hints:**\n`;
+			const topic = `In this channel is currently hosting a game of **Guess it.** The range is **1-${number.content}**, and the prize for guessing correctly is: **${price.content}**\n\n**Hints:**`;
 			await gameChannel?.edit({topic: topic});
 		} catch (error) {
 			console.log(error);

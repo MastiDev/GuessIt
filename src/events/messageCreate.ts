@@ -1,5 +1,5 @@
 import config from '../data/config.js';
-import { Client, Message } from 'discord.js';
+import {Client, Message, TextChannel} from 'discord.js';
 import { EmbedBuilder} from '@discordjs/builders';
 
 interface CustomCommand {
@@ -54,6 +54,12 @@ async function checkRounds(client: Client, channelid: string, message: Message) 
 				);
 			await message.reply({embeds: [embed]});
 			client.Eround.delete(channelid);
+
+			const channel = await client.channels.fetch(channelid) as TextChannel;
+			if (!channel) return;
+
+			const topic = 'The **Guess it** round has ended.';
+			await channel.edit({topic: topic});
 		}
 	} catch (error) {
 		console.log(error);
