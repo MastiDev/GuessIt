@@ -46,6 +46,9 @@ export default {
 			const channelid = channel.mentions.channels.first()?.id;
 			if (!channelid) return interaction.channel.send('You need to mention a Valid Channel!');
 
+			const channelType = await client.channels.fetch(channelid) as TextChannel;
+			if (channelType.type !== 0) return interaction.channel.send('You need to mention a Text Channel!');
+
 			const dcChannel = await client.channels.fetch(channelid);
 			if (!dcChannel) return  interaction.channel.send('You need to mention a Valid Channel!');
 
